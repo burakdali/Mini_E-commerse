@@ -71,3 +71,14 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
     but the time wasn't enough for that so it will be designed and implemented as soon as possible.
 -   The cart logic in my app is containing of two tables so we need to add data to two tables.
 -   I calculate the total cart price every time use add data to cart and save it in cart table.
+
+## Steps To install:
+
+[1] Run git clone https://github.com/burakdali/Mini_E-commerse.git
+[2] Run composer install.
+[3] Run cp .env.example .env.
+[4] Run php artisan key:generate.
+[5] using xampp create local database and set up Database name in .env file.
+[6] Run php artisan migrate:fresh --seed.
+[7] Run php artisan serve.
+[8] Go to link localhost:port
