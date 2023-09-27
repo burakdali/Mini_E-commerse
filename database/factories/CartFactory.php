@@ -19,6 +19,7 @@ class CartFactory extends Factory
         return [
             "user_id" => $this->faker->numberBetween(1, 10),
             "total_cart_amount" => $this->faker->randomNumber(4),
+            "is_finished" => $this->faker->boolean(),
         ];
     }
 }

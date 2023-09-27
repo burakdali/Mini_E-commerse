@@ -19,6 +19,7 @@ class CartResource extends JsonResource
             "id" => $this->id,
             "user" => $this->user->name,
             "total_cart_amount" => $this->total_cart_amount,
+            "is_finished" => $this->is_finished
 
         ];
     }

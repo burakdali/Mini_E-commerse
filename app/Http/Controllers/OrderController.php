@@ -2,63 +2,86 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderResource;
+use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
+use App\Traits\HttpResponseTrait;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use HttpResponseTrait;
+
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+    }
+
+
     public function index()
     {
-        //
+        try {
+            return OrderResource::collection(Order::all());
+        } catch (Exception $ex) {
+            return response()->json([
+                $this->failure($ex->getMessage())
+            ]);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Order $order)
+        // try {
+        //     $order = Order::create($request->validated());
+        //     return OrderResource::make($order);
+        // } catch (Exception $ex) {
+        //     return response()->json([
+        //         $this->failure($ex->getMessage())
+        //     ]);
+        // }
+    }
+    public function HelperFunction($product)
     {
-        //
+        Cart::create([]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
+    public function show(Order $order)
+    { {
+            try {
+                return OrderResource::make($order);
+            } catch (Exception $ex) {
+                $this->failure($ex->getMessage());
+            }
+        }
+    }
+
     public function update(Request $request, Order $order)
     {
-        //
+        try {
+            $order->update($request->validated());
+            return OrderResource::make($order);
+        } catch (Exception $ex) {
+            $this->failure($ex->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Order $order)
     {
-        //
+        try {
+            $id = $order->id;
+            $order->delete();
+            return $this->success("Order " . $id .  " has been deleted successfully");
+        } catch (Exception $ex) {
+            $this->failure($ex->getMessage());
+        }
     }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("user_id");
             $table->double("total_cart_amount", 8, 2);
+            $table->boolean("is_finished")->default(false);
             $table->timestamps();
             $table->foreign("user_id")->on("users")->references("id")->cascadeOnDelete();
         });

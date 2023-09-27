@@ -11,6 +11,7 @@ class Cart extends Model
     protected $fillable = [
         "user_id",
         "total_cart_amount",
+        "is_finished"
     ];
     function cartDetails()
     {

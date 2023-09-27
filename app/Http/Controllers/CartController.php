@@ -3,62 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\CartDetails;
+use App\Models\Product;
+use App\Traits\HttpResponseTrait;
+use App\Traits\Purchasable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use HttpResponseTrait, Purchasable;
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function index()
     {
-        //
+        $user_id = Auth::user()->id;
+        $cart = Cart::where("user_id", $user_id)
+            ->where("is_finished", 0)
+            ->get();
+        return $this->success("Your Active Cart is", $cart);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+        $this->addToCart($request);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
     public function show(Cart $cart)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Cart $cart)
     {
-        //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Cart $cart)
     {
-        //
     }
 }
