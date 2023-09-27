@@ -30,7 +30,7 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
-        $this->addToCart($request);
+        $this->addProductToCart($request->product_id, $request->quantity);
     }
 
     public function show(Cart $cart)

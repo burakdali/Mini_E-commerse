@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 trait Purchasable
 {
-    #the cart logic in my app is containing of two tables so we need to add data to two tables
 
-    protected function addToCart($request)
+    protected function addProductToCart($product_id, $quantity)
     {
         $user_id = Auth::user()->id;
         $cart = Cart::where("user_id", $user_id)
@@ -19,27 +18,20 @@ trait Purchasable
             ->get();
         CartDetails::create([
             "cart_id" => $cart[0]->id,
-            "product_id" => $request->product_id,
-            "quantity" => $request->quantity,
+            "product_id" => $product_id,
+            "quantity" => $quantity,
         ]);
-        $product = Product::find($request->product_id);
+        $product = Product::find($product_id);
         if (!$cart->isEmpty()) {
-            $cart[0]->total_cart_amount += ($product->price * $request->quantity);
+            $cart[0]->total_cart_amount += calculateProductTotalPrice($product->price, $quantity);
             $cart[0]->save();
             return $cart[0];
         } else {
             Cart::create([
                 "user_id" => Auth::user()->id,
-                "total_cart_amount" => $product->price * $request->quantity,
+                "total_cart_amount" => calculateProductTotalPrice($product->price, $quantity),
                 "is_finished" => 0,
             ]);
         }
-    }
-    protected function addToSingleTable($request, $tableName, ...$attributes)
-    {
-    }
-
-    protected function addToDoubleTable($request, $mainTable, $detailsTable, ...$mainTableAttributes, ...$detailsTableAttributes)
-    {
     }
 }
