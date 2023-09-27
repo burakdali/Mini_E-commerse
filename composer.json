@@ -32,7 +32,9 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/calculateProductTotalPrice.php"
+            "app/Helpers/calculateProductTotalPrice.php",
+            "app/Helpers/getUserCart.php",
+            "app/Helpers/getCurrentUserId.php"
         ]
     },
     "autoload-dev": {

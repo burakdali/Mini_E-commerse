@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
 use App\Traits\HttpResponseTrait;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,68 +21,21 @@ class OrderController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['index', 'show']]);
+        $this->middleware('auth:api');
     }
 
-
-    public function index()
+    public function store()
     {
-        try {
-            return OrderResource::collection(Order::all());
-        } catch (Exception $ex) {
-            return response()->json([
-                $this->failure($ex->getMessage())
+        $cart = getUserCart(getCurrentUserId());
+        if (!$cart->isEmpty()) {
+            $cart[0]->is_finished = true;
+            return Order::create([
+                "user_id" => getCurrentUserId(),
+                "total_amount" => $cart[0]->total_cart_amount,
+                "order_date" => now(),
             ]);
-        }
-    }
-
-
-    public function store(Request $request)
-    {
-
-        // try {
-        //     $order = Order::create($request->validated());
-        //     return OrderResource::make($order);
-        // } catch (Exception $ex) {
-        //     return response()->json([
-        //         $this->failure($ex->getMessage())
-        //     ]);
-        // }
-    }
-    public function HelperFunction($product)
-    {
-        Cart::create([]);
-    }
-
-    public function show(Order $order)
-    { {
-            try {
-                return OrderResource::make($order);
-            } catch (Exception $ex) {
-                $this->failure($ex->getMessage());
-            }
-        }
-    }
-
-    public function update(Request $request, Order $order)
-    {
-        try {
-            $order->update($request->validated());
-            return OrderResource::make($order);
-        } catch (Exception $ex) {
-            $this->failure($ex->getMessage());
-        }
-    }
-
-
-    public function destroy(Order $order)
-    {
-        try {
-            $id = $order->id;
-            $order->delete();
-            return $this->success("Order " . $id .  " has been deleted successfully");
-        } catch (Exception $ex) {
-            $this->failure($ex->getMessage());
+        } else {
+            return "You can't place an order because you don't have active cart yet!";
         }
     }
 }

@@ -23,11 +23,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::apiResources([
-    "products" => ProductController::class,
-    "orders" => OrderController::class,
-    "cart" => CartController::class
-]);
+#Get All Products
+Route::get("products", [ProductController::class, "index"]);
+#Get signed User Cart
+Route::get("cart", [CartController::class, "index"]);
+#Add New Product To Cart
+Route::post("cart/add", [CartController::class, "store"]);
+#remove Product From Cart
+Route::post("cart/remove", [CartController::class, "remove"]);
+#Place New Order
+Route::post("orders/place", [OrderController::class, "store"]);
+
+#Authentication Routes
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
